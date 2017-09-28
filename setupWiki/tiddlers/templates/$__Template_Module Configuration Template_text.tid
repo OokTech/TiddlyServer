@@ -9,4 +9,5 @@ type: text/vnd.tiddlywiki
    tag=input
    index=<<CurrentProperty>>
    class='configuration-text-input'
+   placeholder='Enter Path To Wiki'
 />

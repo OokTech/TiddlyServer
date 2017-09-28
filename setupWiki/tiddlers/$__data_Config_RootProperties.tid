@@ -1,0 +1,9 @@
+created: 20170928182153300
+modified: 20170928182413047
+tags: 
+title: $:/data/Config/RootProperties
+type: application/json
+
+{
+"address": "127.0.0.1"
+}

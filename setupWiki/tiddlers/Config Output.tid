@@ -4,74 +4,90 @@ type: text/vnd.tiddlywiki
 
 \define ListEntries()
 "<$list
-    filter='[<currentTiddler>removeprefix[$:/]]'
-    emptyMessage="""
-    <$view
-        tiddler=<<IndexName>>
-        field='title'
-    />
-    """
+  filter='[<currentTiddler>removeprefix[$:/]]'
+  emptyMessage="""
+  <$view
+    tiddler=<<IndexName>>
+    field='title'
+  />
+  """
 ><$view
-        tiddler=<<IndexName>>
-        field='title'
-    /></$list>": {
+  tiddler=<<IndexName>>
+  field='title'
+  /></$list>": {
 <ul>
-    <$list
-        filter='[<currentTiddler>indexes[]]+[butlast[]]'
-        variable=IndexName
+  <$list
+    filter='[<currentTiddler>indexes[]]+[butlast[]]'
+    variable=IndexName
+  >
+    <li
+      style='list-style-type:none;'
     >
-        <li
-            style='list-style-type:none;'
-        >
-            <$list
-                filter='[<currentTiddler>getindex<IndexName>has[title]]'
-                emptyMessage=""""<$view tiddler=<<IndexName>> field='title'/>": "<$list filter='[<currentTiddler>getindex<IndexName>]'><$view field='title'/></$list>",<br>"""
-            ><<ListEntries>>,<br>
-            </$list>
-        </li>
-    </$list>
-    <$list
-        filter='[<currentTiddler>indexes[]]+[last[]]'
-        variable=IndexName
+      <$list
+        filter='[<currentTiddler>getindex<IndexName>has[title]]'
+        emptyMessage=""""<$view tiddler=<<IndexName>> field='title'/>": "<$list filter='[<currentTiddler>getindex<IndexName>]'><$view field='title'/></$list>",<br>"""
+      ><<ListEntries>>,<br>
+      </$list>
+    </li>
+  </$list>
+  <$list
+      filter='[<currentTiddler>indexes[]]+[last[]]'
+      variable=IndexName
+  >
+    <li
+        style='list-style-type:none;'
     >
-        <li
-            style='list-style-type:none;'
-        >
-            <$list
-                filter='[<currentTiddler>getindex<IndexName>has[title]]'
-                emptyMessage=""""<$view tiddler=<<IndexName>> field='title'/>": "<$list filter='[<currentTiddler>getindex<IndexName>]'><$view field='title'/></$list>"<br>"""
-            ><<ListEntries>><br>
-            </$list>
-        </li>
-    </$list>
+      <$list
+        filter='[<currentTiddler>getindex<IndexName>has[title]]'
+        emptyMessage=""""<$view tiddler=<<IndexName>> field='title'/>": "<$list filter='[<currentTiddler>getindex<IndexName>]'><$view field='title'/></$list>"<br>"""
+      ><<ListEntries>><br>
+      </$list>
+    </li>
+  </$list>
 </ul>
 }
 \end
 
+\define ListRootProperty()
+  "<<IndexName>>": "<$view  tiddler='$:/data/Config/RootProperties' index=<<IndexName>>/>",<br>
+\end
+
 {<br>
 <ul>
+  <li
+    style='list-style-type:none;'
+  >
+    <!-- List Root Properties -->
+    <!-- TODO this part needs to have a check to see if there are any non-root properties and if not it needs to leave the comma off of the last item listed. -->
     <li
-        style='list-style-type:none;'
+      style='list-style-type:none'
     >
-        <!-- List Configurations -->
-        <$list
-            filter='[[$:/data/Config]indexes[]addprefix[$:/]]+[butlast[]]'
-        >
-            <li
-                style='list-style-type:none;'
-            >
-                <<ListEntries>>,
-            </li>
-        </$list>
-        <$list
-            filter='[[$:/data/Config]indexes[]addprefix[$:/]]+[last[]]'
-        >
-            <li
-                style='list-style-type:none;'
-            >
-                <<ListEntries>>
-            </li>
-        </$list>
+      <$list
+        filter='[[$:/data/Config/RootProperties]indexes[]]'
+        variable=IndexName
+      >
+        <<ListRootProperty>>
+      </$list>
     </li>
+    <!-- List Configurations -->
+    <$list
+      filter='[[$:/data/Config]indexes[]addprefix[$:/]]+[butlast[]]'
+    >
+      <li
+        style='list-style-type:none;'
+      >
+        <<ListEntries>>,
+      </li>
+    </$list>
+    <$list
+      filter='[[$:/data/Config]indexes[]addprefix[$:/]]+[last[]]'
+    >
+      <li
+        style='list-style-type:none;'
+      >
+        <<ListEntries>>
+      </li>
+    </$list>
+  </li>
 </ul>
 }

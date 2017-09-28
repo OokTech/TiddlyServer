@@ -70,44 +70,57 @@ The problem is that if there are multiple levels of children and grandchildren t
 
 \define AddProperty()
 <$action-setfield
-    $tiddler=<<qualify """$(currentTiddler)$""">>
-    text=show
+  $tiddler=<<qualify """$(currentTiddler)$""">>
+  text=show
 />
 \end
 
 \define NewProperty()
 <$reveal
-    tag=tr
-    state=<<qualify """$(currentTiddler)$""">>
-    type='match'
-    text=show
+  tag=tr
+  state=<<qualify """$(currentTiddler)$""">>
+  type='match'
+  text=show
 >
     <td>
-        <$edit-text
-            tiddler='$:/temp/NewProperty'
-            field='name'
-        />
+      <$edit-text
+        tiddler='$:/temp/NewProperty'
+        field='name'
+        placeholder='Name'
+      />
     </td>
     <td>
         <$select
-            tiddler='$:/temp/NewProperty'
-            field='value_type'
+          tiddler='$:/temp/NewProperty'
+          field='value_type'
+          default=''
         >
+          <option
+            value=''
+          >
+            //Select Type//
+          </option>
+          <!--
+          <$list
+            filter='[removeprefix[$:/Template/Module Configuration Template/]]'
+          >
             <option>
-                --
+              <$view
+                field='title'
+              />
             </option>
-            <$list
-                filter='[removeprefix[$:/Template/Module Configuration Template/]]'
-            >
-                <option>
-                    <$view
-                        field='title'
-                    />
-                </option>
-            </$list>
-            <option>
-                Object
-            </option>
+          </$list>
+          -->
+          <option
+            value='text'
+          >
+            Wiki
+          </option>
+          <option
+            value='Object'
+          >
+            Group
+          </option>
         </$select>
         <$button>
             Create
@@ -129,7 +142,7 @@ The problem is that if there are multiple levels of children and grandchildren t
                         <$action-setfield
                             $tiddler=<<ConfigListTiddler>>
                             $index={{$:/temp/NewProperty!!name}}
-                            $value={{$:/temp/NewProperty!!value_type}}
+                            $value=text
                         />
                     </$reveal>
                 </$reveal>
@@ -190,121 +203,130 @@ The problem is that if there are multiple levels of children and grandchildren t
 
 \define ListProperties()
 <li>
-    <table
-        style='width:100%;border:none;padding:0px;margin:0px'
-    >
-        <tr>
-            <td
-                class='button-appear-on-hover'
-                style='border:none;'
-            >
-                <span
-                    style='white-space: nowrap;'
-                >
-                    <$button
-                        class='tc-btn-invisible'
-                    >
-                        {{$:/core/images/delete-button}}
-                        <<DeletePropertyWithChildren>>
-                    </$button>
-                    <$view
-                        field='caption'
-                    >
-                        <$view
-                            field='title'
-                        />
-                    </$view>:
-                </span>
-            </td>
-            <td
-                class='button-appear-on-hover'
-                style='width:90%;border:none;'
-            >
-                {
-                <$button
-                    class='tc-btn-invisible'
-                >
-                    {{$:/core/images/new-button}}
-                    <<AddProperty>>
-                </$button>
-            </td>
-        </tr>
-        <<NewProperty>>
-    </table>
-    <ul
-        style='list-style-type:none;'
-    >
-        <$list
-            filter='[<ConfigListTiddler>indexes[]!prefix[$:/]]'
-            variable=CurrentProperty
-            emptyMessage=""
+  <table
+    style='width:100%;border:none;padding:0px;margin:0px'
+  >
+    <tr>
+      <td
+        class='button-appear-on-hover'
+        style='border:none;'
+      >
+        <span
+          style='white-space: nowrap;'
         >
-            <li>
-                <table
-                    style='width:100%;border:none;padding:0px;margin:0px'
-                >
-                    <tr>
-                        <td
-                            class='button-appear-on-hover'
-                            style='border:none;white-space:nowrap;'
-                        >
-                            <$button
-                                class='tc-btn-invisible'
-                            >
-                                {{$:/core/images/delete-button}}
-                                <<DeleteSimpleProperty>>
-                            </$button>
-                            <$view
-                                tiddler=<<CurrentProperty>>
-                                field='title'
-                            />:
-                        </td>
-                        <td
-                            style='width:100%;border:none;'
-                        >
-                            <$list
-                                filter='[<ConfigListTiddler>getindex<CurrentProperty>splitbefore[ ]]+[first[]]'
-                                variable=dummy
-                            >
-                                <<MakeInput>>
-                            </$list>
-                        </td>
-                    </tr>
-                </table>
-            </li>
-        </$list>
-        <$list
-            filter='[<ConfigListTiddler>indexes[]prefix[$:/]]'
-            variable=CurrentProperty
-            emptyMessage=""
+          <$list
+            filter='[<IsFirst>prefix[false]]'
+          >
+            <$button
+              class='tc-btn-invisible'
+            >
+              {{$:/core/images/delete-button}}
+              <<DeletePropertyWithChildren>>
+            </$button>
+          </$list>
+          <$view
+            field='caption'
+          >
+            <$view
+              field='title'
+            />
+          </$view>:
+        </span>
+      </td>
+      <td
+        class='button-appear-on-hover'
+        style='width:90%;border:none;'
+      >
+        {
+        <$button
+          class='tc-btn-invisible'
         >
-            <$list
-                filter='[<ConfigListTiddler>getindex<CurrentProperty>addprefix[-]addprefix<currentTiddler>]'
-            >
-                <<ListProperties>>
-            </$list>
-        </$list>
-    </ul>
-    <table
-        style='width:100%;border:none;padding:0px;margin:0px'
+          {{$:/core/images/new-button}}
+          <<AddProperty>>
+        </$button>
+      </td>
+    </tr>
+    <<NewProperty>>
+  </table>
+  <ul
+    style='list-style-type:none;'
+  >
+    <$list
+      filter='[<ConfigListTiddler>indexes[]!prefix[$:/]]'
+      variable=CurrentProperty
+      emptyMessage=""
     >
-        <tr>
+      <li>
+        <table
+          style='width:100%;border:none;padding:0px;margin:0px'
+        >
+          <tr>
             <td
-                style='border:none;'
+              class='button-appear-on-hover'
+              style='border:none;white-space:nowrap;'
             >
-            }
+              <$button
+                class='tc-btn-invisible'
+              >
+                {{$:/core/images/delete-button}}
+                <<DeleteSimpleProperty>>
+              </$button>
+              <$view
+                tiddler=<<CurrentProperty>>
+                field='title'
+              />:
             </td>
             <td
-                style='width:100%;border:none;'
+              style='width:100%;border:none;'
             >
+              <$list
+                filter='[<ConfigListTiddler>getindex<CurrentProperty>splitbefore[ ]]+[first[]]'
+                variable=dummy
+              >
+                <<MakeInput>>
+              </$list>
             </td>
-        </tr>
-    </table>
+          </tr>
+        </table>
+      </li>
+    </$list>
+    <$list
+      filter='[<ConfigListTiddler>indexes[]prefix[$:/]]'
+      variable=CurrentProperty
+      emptyMessage=""
+    >
+      <$list
+        filter='[<ConfigListTiddler>getindex<CurrentProperty>addprefix[-]addprefix<currentTiddler>]'
+      >
+        <$set
+          name=IsFirst
+          value='false'
+        >
+          <<ListProperties>>
+        </$set>
+      </$list>
+    </$list>
+  </ul>
+  <table
+    style='width:100%;border:none;padding:0px;margin:0px'
+  >
+    <tr>
+      <td
+        style='border:none;'
+      >
+      }
+      </td>
+      <td
+        style='width:100%;border:none;'
+      >
+      </td>
+    </tr>
+  </table>
 </li>
 \end
 
 <ul
-    style='list-style-type:none;'
+  style='list-style-type:none;'
 >
-    <<ListProperties>>
+  <<ListProperties>>
 </ul>
