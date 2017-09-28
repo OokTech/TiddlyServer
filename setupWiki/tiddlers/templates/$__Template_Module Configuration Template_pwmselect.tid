@@ -1,0 +1,27 @@
+revision: 0
+tags:
+title: $:/Template/Module Configuration Template/pwmselect
+type: text/vnd.tiddlywiki
+
+<$select
+    tiddler=<<currentTiddler>>
+    index=<<CurrentProperty>>
+    class='configuration-select-input'
+>
+    <option
+        value=''
+    >
+        --
+    </option>
+    <$list
+        filter='[list[$:/data/PWMPinList]]'
+    >
+        <option
+            value=<<currentTiddler>>
+        >
+            <$view
+                field='title'
+            />
+        </option>
+    </$list>
+</$select>

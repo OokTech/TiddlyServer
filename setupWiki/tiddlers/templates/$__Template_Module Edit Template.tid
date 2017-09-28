@@ -1,0 +1,310 @@
+revision: 0
+tags:
+title: $:/Template/Module Edit Template
+type: text/vnd.tiddlywiki
+
+\define ConfigListTiddler() $(currentTiddler)$/Configuration
+
+\define OldIndexName() $(currentTiddler)$-$(CurrentProperty)$
+
+\define OldConfigTiddlerName() $(CurrentProperty)$/Configuration
+
+\define NewIndexName() $(currentTiddler)$-$(NewName)$
+
+\define NewConfigTiddlerName() $(currentTiddler)$-$(NewName)$/Configuration
+
+\define SelectFilter() [list[$(ConfigListTiddler)$##$(CurrentProperty)$]butfirst[]]
+
+\define MakeInput() {{||$:/Template/Module Configuration Template/$(dummy)$}}
+
+\define DeleteSimpleProperty()
+<!-- Clear the value in the info tiddler -->
+<$action-setfield
+    $tiddler=<<currentTiddler>>
+    $index=<<CurrentProperty>>
+/>
+<!-- Clear the entry in the configuration tiddler -->
+<$action-setfield
+    $tiddler=<<ConfigListTiddler>>
+    $index=<<CurrentProperty>>
+/>
+\end
+
+\define DeletePropertyWithChildren()
+<!-- Clear the entry in the configuration tiddler -->
+<$list
+    filter='[<ConfigListTiddler>get[parent]addsuffix[/Configuration]]'
+>
+    <$action-setfield
+        $tiddler=<<currentTiddler>>
+        $index=<<CurrentProperty>>
+    />
+</$list>
+<!-- Clear the value in the info tiddler -->
+<$list
+    filter='[<CurrentProperty>get[caption]]'
+    variable=Caption
+>
+    <$list
+        filter='[<ConfigListTiddler>get[parent]]'
+        variable=ParentTiddler
+    >
+        <$action-setfield
+            $tiddler=<<ParentTiddler>>
+            $index=<<Caption>>
+        />
+    </$list>
+</$list>
+<!--delete the new configuration tiddler for the new property -->
+<$action-deletetiddler
+    $tiddler=<<ConfigListTiddler>>
+/>
+<!--delete the data tiddler for the property -->
+<$action-deletetiddler
+    $tiddler=<<CurrentProperty>>
+/>
+<!-- Later make this so that it removes children as well by deleting the tiddlers.
+The problem is that if there are multiple levels of children and grandchildren than this becomes complex.
+-->
+\end
+
+\define AddProperty()
+<$action-setfield
+    $tiddler=<<qualify """$(currentTiddler)$""">>
+    text=show
+/>
+\end
+
+\define NewProperty()
+<$reveal
+    tag=tr
+    state=<<qualify """$(currentTiddler)$""">>
+    type='match'
+    text=show
+>
+    <td>
+        <$edit-text
+            tiddler='$:/temp/NewProperty'
+            field='name'
+        />
+    </td>
+    <td>
+        <$select
+            tiddler='$:/temp/NewProperty'
+            field='value_type'
+        >
+            <option>
+                --
+            </option>
+            <$list
+                filter='[removeprefix[$:/Template/Module Configuration Template/]]'
+            >
+                <option>
+                    <$view
+                        field='title'
+                    />
+                </option>
+            </$list>
+            <option>
+                Object
+            </option>
+        </$select>
+        <$button>
+            Create
+            <$reveal
+                type='nomatch'
+                state='$:/temp/NewProperty!!value_type'
+                text=Object
+            >
+                <$reveal
+                    type='nomatch'
+                    state='$:/temp/NewProperty!!value_type'
+                    text=''
+                >
+                    <$reveal
+                        type='nomatch'
+                        state='$:/temp/NewProperty!!name'
+                        text=''
+                    >
+                        <$action-setfield
+                            $tiddler=<<ConfigListTiddler>>
+                            $index={{$:/temp/NewProperty!!name}}
+                            $value={{$:/temp/NewProperty!!value_type}}
+                        />
+                    </$reveal>
+                </$reveal>
+            </$reveal>
+            <$reveal
+                type='match'
+                state='$:/temp/NewProperty!!value_type'
+                text=Object
+            >
+                <$reveal
+                    type='nomatch'
+                    state='$:/temp/NewProperty!!name'
+                    text=''
+                >
+                    <$list
+                        filter='[{$:/temp/NewProperty!!name}]'
+                        variable=NewName
+                    >
+                        <!--create the data tiddler index in <<ConfigListTiddler>>-->
+                        <$action-setfield
+                            $tiddler=<<ConfigListTiddler>>
+                            $index=<<NewIndexName>>
+                            $value=<<NewName>>
+                        />
+                        <!--Create the new data tiddler for the new property -->
+                        <$action-setfield
+                            $tiddler=<<NewIndexName>>
+                            caption=<<NewName>>
+                            type='application/json'
+                        />
+                        <!--create the new configuration tiddler for the new property -->
+                        <$action-setfield
+                            $tiddler=<<NewConfigTiddlerName>>
+                            parent=<<currentTiddler>>
+                            type='application/json'
+                        />
+                        <!--Set the value in <<currentTiddler>> to point to the newly created tiddler-->
+                        <$action-setfield
+                            $tiddler=<<currentTiddler>>
+                            $index=<<NewName>>
+                            $value=<<NewIndexName>>
+                        />
+                    </$list>
+                </$reveal>
+            </$reveal>
+            <$action-setfield
+                $tiddler='$:/temp/NewProperty'
+                name=''
+                value_type=''
+            />
+            <$action-deletetiddler
+                $tiddler=<<qualify """$(currentTiddler)$""">>
+            />
+        </$button>
+    </td>
+</$reveal>
+\end
+
+\define ListProperties()
+<li>
+    <table
+        style='width:100%;border:none;padding:0px;margin:0px'
+    >
+        <tr>
+            <td
+                class='button-appear-on-hover'
+                style='border:none;'
+            >
+                <span
+                    style='white-space: nowrap;'
+                >
+                    <$button
+                        class='tc-btn-invisible'
+                    >
+                        {{$:/core/images/delete-button}}
+                        <<DeletePropertyWithChildren>>
+                    </$button>
+                    <$view
+                        field='caption'
+                    >
+                        <$view
+                            field='title'
+                        />
+                    </$view>:
+                </span>
+            </td>
+            <td
+                class='button-appear-on-hover'
+                style='width:90%;border:none;'
+            >
+                {
+                <$button
+                    class='tc-btn-invisible'
+                >
+                    {{$:/core/images/new-button}}
+                    <<AddProperty>>
+                </$button>
+            </td>
+        </tr>
+        <<NewProperty>>
+    </table>
+    <ul
+        style='list-style-type:none;'
+    >
+        <$list
+            filter='[<ConfigListTiddler>indexes[]!prefix[$:/]]'
+            variable=CurrentProperty
+            emptyMessage=""
+        >
+            <li>
+                <table
+                    style='width:100%;border:none;padding:0px;margin:0px'
+                >
+                    <tr>
+                        <td
+                            class='button-appear-on-hover'
+                            style='border:none;white-space:nowrap;'
+                        >
+                            <$button
+                                class='tc-btn-invisible'
+                            >
+                                {{$:/core/images/delete-button}}
+                                <<DeleteSimpleProperty>>
+                            </$button>
+                            <$view
+                                tiddler=<<CurrentProperty>>
+                                field='title'
+                            />:
+                        </td>
+                        <td
+                            style='width:100%;border:none;'
+                        >
+                            <$list
+                                filter='[<ConfigListTiddler>getindex<CurrentProperty>splitbefore[ ]]+[first[]]'
+                                variable=dummy
+                            >
+                                <<MakeInput>>
+                            </$list>
+                        </td>
+                    </tr>
+                </table>
+            </li>
+        </$list>
+        <$list
+            filter='[<ConfigListTiddler>indexes[]prefix[$:/]]'
+            variable=CurrentProperty
+            emptyMessage=""
+        >
+            <$list
+                filter='[<ConfigListTiddler>getindex<CurrentProperty>addprefix[-]addprefix<currentTiddler>]'
+            >
+                <<ListProperties>>
+            </$list>
+        </$list>
+    </ul>
+    <table
+        style='width:100%;border:none;padding:0px;margin:0px'
+    >
+        <tr>
+            <td
+                style='border:none;'
+            >
+            }
+            </td>
+            <td
+                style='width:100%;border:none;'
+            >
+            </td>
+        </tr>
+    </table>
+</li>
+\end
+
+<ul
+    style='list-style-type:none;'
+>
+    <<ListProperties>>
+</ul>

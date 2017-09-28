@@ -1,0 +1,36 @@
+revision: 0
+tags: Tool
+title: Save Configuration
+type: text/vnd.tiddlywiki
+
+Configuration Name:
+<$edit-text
+    tiddler='$:/temp/ConfigurationName'
+    field='config_name'
+/>
+
+<$wikify
+    name=Rendered
+    text={{config}}
+>
+    <$button>
+        Save Configuration
+        <$action-setfield
+            $tiddler={{$:/temp/ConfigurationName!!config_name}}
+            text=<<Rendered>>
+            tags=Configuration
+        />
+        <$action-setfield
+            $tiddler='$:/temp/ConfigurationName'
+            config_name=''
+        />
+    </$button>
+</$wikify>
+
+Saved Configurations:
+
+<$list
+    filter='[tag[Configuration]]'
+>
+
+</$list>

@@ -1,0 +1,12 @@
+revision: 0
+tags:
+title: $:/Template/Module Configuration Template/text
+type: text/vnd.tiddlywiki
+
+<$edit-text
+   tiddler=<<currentTiddler>>
+   type=text
+   tag=input
+   index=<<CurrentProperty>>
+   class='configuration-text-input'
+/>

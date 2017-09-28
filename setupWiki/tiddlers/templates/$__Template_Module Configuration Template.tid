@@ -1,0 +1,61 @@
+revision: 0
+tags:
+title: $:/Template/Module Configuration Template
+type: text/vnd.tiddlywiki
+
+\define ConfigListTiddler() $(currentTiddler)$/Configuration
+
+\define SelectFilter() [list[$(ConfigListTiddler)$##$(CurrentProperty)$]butfirst[]]
+
+\define MakeInput() {{||$:/Template/Module Configuration Template/$(dummy)$}}
+
+\define ListProperties()
+<tr>
+    <th
+        colspan=2
+    >
+        <$view
+            field='title'
+        />
+    </th>
+</tr>
+<$list
+    filter='[<ConfigListTiddler>indexes[]!prefix[$:/]]'
+    variable=CurrentProperty
+    emptyMessage=""
+>
+    <tr>
+        <td>
+            <$view
+                tiddler=<<CurrentProperty>>
+                field='title'
+            />
+        </td>
+        <td>
+            <$list
+                filter='[<ConfigListTiddler>getindex<CurrentProperty>splitbefore[ ]]'
+                variable=dummy
+            >
+                <<MakeInput>>
+            </$list>
+        </td>
+    </tr>
+</$list>
+<$list
+    filter='[<ConfigListTiddler>indexes[]prefix[$:/]]'
+    variable=CurrentProperty
+    emptyMessage=""
+>
+    <$list
+        filter='[<ConfigListTiddler>getindex<CurrentProperty>addprefix[-]addprefix<currentTiddler>]'
+    >
+        <<ListProperties>>
+    </$list>
+</$list>
+\end
+
+<table
+    style='width:100%'
+>
+    <<ListProperties>>
+</table>

@@ -1,0 +1,6 @@
+title: $:/data/Config
+type: application/json
+
+{
+    "tree": "true"
+}

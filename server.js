@@ -22,16 +22,10 @@ const eventer = new events_1.EventEmitter();
 const debug = server_types_1.DebugLogger('APP');
 const error = server_types_1.ErrorLogger('APP');
 const logger = require('./lib/morgan.js').handler;
-const settingsFile = path.resolve(process.argv[2] || 'settings.json');
-console.log("Settings file: %s", settingsFile);
-var settings;
-try {
-    settings = JSON.parse(fs.readFileSync(settingsFile, 'utf8'));
-}
-catch (e) {
-    console.error(/*colors.BgWhite + */ server_types_1.colors.FgRed + "The settings file could not be parsed correctly" + server_types_1.colors.Reset);
-    throw e;
-}
+
+const settings = require("./config/LoadConfig.js");
+const settingsFile = path.resolve(process.argv[2] || './config/Config.json');
+
 if (!settings.tree)
     throw "tree is not specified in the settings file";
 const settingsDir = path.dirname(settingsFile);
@@ -132,8 +126,8 @@ rx_1.Observable.fromEvent(server, 'request', (req, res) => {
     console.error("the server will now close");
     server.close();
 }, () => {
-    //theoretically we could rebind the listening port without restarting the process, 
-    //but I don't know what would be the point of that. If this actually happens, 
+    //theoretically we could rebind the listening port without restarting the process,
+    //but I don't know what would be the point of that. If this actually happens,
     //there will be no more listeners so the process will probably exit.
     //In practice, the only reason this should happen is if the server close event fires.
     console.log('finished processing for some reason');

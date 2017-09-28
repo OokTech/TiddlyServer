@@ -1,0 +1,14 @@
+revision: 0
+tags:
+title: Configuration
+type: text/vnd.tiddlywiki
+
+Most things will be done from this tiddler.
+
+The `Config Output` tab will show you what will be exported with the current settings.
+
+The `Edit Modules` tab lets you add or remove properties from a modules configuration. You can also set values in that tab.
+
+The `Setup Modules` tab will let you change values of properties in each module. You can do everything in this tab in the `Edit Modules` tab, and you can't add new properties using it. I started with this one and made the other one to add and remove properties but I realized that everything can be done using the other tab. I will probably either remove this tab or make it so you can add and remove properties using this one too because the layout may be better for some people.
+
+<<tabs "[tag[Tool]]">>

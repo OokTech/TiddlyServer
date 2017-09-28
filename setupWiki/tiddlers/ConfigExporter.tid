@@ -1,0 +1,11 @@
+description: Export raw json files
+extension: .json
+revision: 0
+tags: $:/tags/Exporter
+title: ConfigExporter
+type: text/vnd.tiddlywiki
+
+\define renderContent()
+{{{ $(exportFilter)$ ||$:/core/templates/wikified-tiddler}}}
+\end
+<<renderContent>>

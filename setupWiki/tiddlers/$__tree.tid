@@ -1,0 +1,8 @@
+caption: tree
+tags: Component
+title: $:/tree
+type: application/json
+
+{
+    "SetupWiki": "../setupWiki"
+}

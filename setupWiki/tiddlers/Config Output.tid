@@ -1,0 +1,77 @@
+tags: Tool
+title: Config Output
+type: text/vnd.tiddlywiki
+
+\define ListEntries()
+"<$list
+    filter='[<currentTiddler>removeprefix[$:/]]'
+    emptyMessage="""
+    <$view
+        tiddler=<<IndexName>>
+        field='title'
+    />
+    """
+><$view
+        tiddler=<<IndexName>>
+        field='title'
+    /></$list>": {
+<ul>
+    <$list
+        filter='[<currentTiddler>indexes[]]+[butlast[]]'
+        variable=IndexName
+    >
+        <li
+            style='list-style-type:none;'
+        >
+            <$list
+                filter='[<currentTiddler>getindex<IndexName>has[title]]'
+                emptyMessage=""""<$view tiddler=<<IndexName>> field='title'/>": "<$list filter='[<currentTiddler>getindex<IndexName>]'><$view field='title'/></$list>",<br>"""
+            ><<ListEntries>>,<br>
+            </$list>
+        </li>
+    </$list>
+    <$list
+        filter='[<currentTiddler>indexes[]]+[last[]]'
+        variable=IndexName
+    >
+        <li
+            style='list-style-type:none;'
+        >
+            <$list
+                filter='[<currentTiddler>getindex<IndexName>has[title]]'
+                emptyMessage=""""<$view tiddler=<<IndexName>> field='title'/>": "<$list filter='[<currentTiddler>getindex<IndexName>]'><$view field='title'/></$list>"<br>"""
+            ><<ListEntries>><br>
+            </$list>
+        </li>
+    </$list>
+</ul>
+}
+\end
+
+{<br>
+<ul>
+    <li
+        style='list-style-type:none;'
+    >
+        <!-- List Configurations -->
+        <$list
+            filter='[[$:/data/Config]indexes[]addprefix[$:/]]+[butlast[]]'
+        >
+            <li
+                style='list-style-type:none;'
+            >
+                <<ListEntries>>,
+            </li>
+        </$list>
+        <$list
+            filter='[[$:/data/Config]indexes[]addprefix[$:/]]+[last[]]'
+        >
+            <li
+                style='list-style-type:none;'
+            >
+                <<ListEntries>>
+            </li>
+        </$list>
+    </li>
+</ul>
+}

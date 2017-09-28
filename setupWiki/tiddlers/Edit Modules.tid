@@ -1,0 +1,74 @@
+revision: 0
+tags: Tool
+title: Edit Modules
+type: text/vnd.tiddlywiki
+
+Select Module:
+<$select
+    tiddler='$:/temp/Configuration'
+    field=selected_module
+>
+    <option
+        value=''
+    >
+        //Create New Module//
+    </option>
+    <$list
+        filter='[tag[Component]]'
+    >
+        <option
+            value=<<currentTiddler>>
+        >
+            <$list
+                filter='[<currentTiddler>removeprefix[$:/]]'
+            >
+                <$view
+                    field='title'
+                />
+            </$list>
+        </option>
+    </$list>
+</$select>
+
+<$list
+    filter='[[$:/temp/Configuration]!has[selected_module]]'
+    variable=dummy
+>
+    Module Name:
+    <$edit-text
+        tiddler='$:/temp/Configuration'
+        field='name'
+        class='tc-edit-texteditor'
+    />
+    <$button>
+        Create Module
+        <$list
+            filter='[{$:/temp/Configuration!!name}addprefix[$:/]]'
+        >
+            <$action-setfield
+                tags=Component
+                caption={{$:/temp/Configuration!!name}}
+                type='application/json'
+            />
+        </$list>
+        <$list
+            filter='[{$:/temp/Configuration!!name}addprefix[$:/]addsuffix[/Configuration]]'
+        >
+            <$action-setfield
+                type='application/json'
+            />
+        </$list>
+        <$action-setfield
+            $tiddler='$:/temp/Configuration'
+            name=''
+        />
+    </$button>
+</$list>
+
+<$list
+    filter='[[$:/temp/Configuration]has[selected_module]get[selected_module]]'
+>
+
+{{||$:/Template/Module Edit Template}}
+
+</$list>

@@ -1,0 +1,6 @@
+title: $:/tree/Configuration
+type: application/json
+
+{
+    "SetupWiki": "text"
+}

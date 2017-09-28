@@ -1,0 +1,19 @@
+revision: 0
+tags:
+title: Edit Modules - Documentation
+type: text/vnd.tiddlywiki
+
+Select the module you want to edit using the drop-down menu. Existing values can be edited depending on what type they are. Boolean values are switched by clicking on the value, values selected from a finite set are changed using drop-down menus and text values get a text input box.
+
+You can remove a value by hovering over the property name so the delete icon (<$button class='tc-btn-invisible'>{{$:/core/images/delete-button}}</$button>) appears and then clicking on the icon.
+
+You can add properties by clicking on the add property icon (<$button class='tc-btn-invisible'>{{$:/core/images/new-button}}</$button>) that appears. You will need to give a name and select the type of value from the drop-down menu.
+
+Value types currently supported:
+
+* `text` - this is a simple text value, it can be whatever you want
+* `checkbox` - this should be called `boolean`, but I haven't gotten around to changing the name yet. It can have the value `true` or `false`. To toggle the value click on it after you have made the property.
+* `polarity` - this is like checkbox or boolean, but the values it toggles between are `1` and `-1`
+* `select` - this is a value picked from a finite list using a drop-down menu. Currently the only way to add values is to edit the Configuration tiddler for the module you are working on. I will give more detals and a better way to set values later.
+* `boardselect`, `pwmselect`, `digitalselect`, `analoginselect`, `axesselect` - These are special cases of the select option that takes the possible values from the list field of tiddlers with names in the form `$:/data/TypeList`, see [[$:/data/DigitalPinList]] for an example. You can create new options by cloning [[$:/Template/Module Configuration Template/analoginselect]], changing the name after the final `/` to match what you want and changing the tiddler whose list is referenced in the body to a tiddler that you create. Better instructions will be made later.
+* `Object` - Another special value, this creates the property as an empty object. You can then add children as either values or further objects.

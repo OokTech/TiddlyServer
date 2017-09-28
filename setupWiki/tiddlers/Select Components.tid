@@ -1,0 +1,46 @@
+revision: 0
+tags: Tool
+title: Select Components
+type: text/vnd.tiddlywiki
+
+\define InnerButton()
+<$reveal
+    type='nomatch'
+    state='$:/data/Config##$(currentTiddler)$'
+    text='true'
+>
+    <input type=checkbox/>
+    <$action-setfield
+        $tiddler='$:/data/Config'
+        $index=<<currentTiddler>>
+        $value=true
+    />
+</$reveal>
+<$reveal
+    type='match'
+    state='$:/data/Config##$(currentTiddler)$'
+    text='true'
+>
+    <input type=checkbox checked=true/>
+    <$action-setfield
+        $tiddler='$:/data/Config'
+        $index=<<currentTiddler>>
+    />
+</$reveal>
+\end
+
+You select which modules are in the output configuration file by selecting them on this list.
+
+<$list
+    filter='[tag[Component]removeprefix[$:/]]'
+>
+    <$button
+        class='tc-btn-invisible'
+    >
+        <<InnerButton>>
+        <$view
+            field='title'
+        />
+    </$button>
+    <br>
+</$list>

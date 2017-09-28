@@ -1,0 +1,22 @@
+revision: 0
+tags:
+title: $:/Template/Module Configuration Template/polarity
+type: text/vnd.tiddlywiki
+
+<$button
+    class='tc-btn-invisible'
+    style='background:lightgrey;padding:2px;border: 0;
+    border-radius:10px;padding-left:10px;padding-right:10px;'
+>
+    <$list
+        filter='[<currentTiddler>getindex<CurrentProperty>prefix[1]]'
+        variable=dummy
+        emptyMessage="""-1<$action-setfield $index=<<CurrentProperty>> $value=1/>"""
+    >
+        1
+        <$action-setfield
+            $index=<<CurrentProperty>>
+            $value=-1
+        />
+    </$list>
+</$button>

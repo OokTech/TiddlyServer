@@ -1,0 +1,41 @@
+revision: 0
+tags: Tool
+title: Setup Modules
+type: text/vnd.tiddlywiki
+
+You can configure modules using this. Select the module you want to configure using the drop down menu, then you can change the values. Boolean values are changed by clicking on the value, text values are changed by editing the text fields and values picked from a finite list are changed using the drop-down menus.
+
+Select Module:
+<$select
+    tiddler='$:/settings/Configuration'
+    field=selected_module
+>
+    <option
+        value=''
+    >
+        --
+    </option>
+    <$list
+        filter='[tag[Component]]'
+    >
+        <option
+            value=<<currentTiddler>>
+        >
+            <$list
+                filter='[<currentTiddler>removeprefix[$:/]]'
+            >
+                <$view
+                    field='title'
+                />
+            </$list>
+        </option>
+    </$list>
+</$select>
+
+<$list
+    filter='[[$:/settings/Configuration]get[selected_module]]'
+>
+
+{{||$:/Template/Module Configuration Template}}
+
+</$list>

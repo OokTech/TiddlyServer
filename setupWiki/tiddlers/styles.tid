@@ -1,0 +1,26 @@
+revision: 0
+tags: $:/tags/Stylesheet
+title: styles
+type: text/vnd.tiddlywiki
+
+.configuration-text-input {
+width:100%;
+border:1px solid grey;
+border-radius:5px;
+background: lightgrey !important;
+}
+
+.configuration-select-input {
+width:100%;
+border:1px solid grey;
+border-radius:5px;
+background: lightgrey !important;
+}
+
+.button-appear-on-hover {
+fill:white;
+}
+
+.button-appear-on-hover:hover {
+fill:black;
+}

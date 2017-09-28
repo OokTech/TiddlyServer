@@ -1,0 +1,22 @@
+revision: 0
+tags:
+title: $:/Template/Module Configuration Template/checkbox
+type: text/vnd.tiddlywiki
+
+<$button
+    class='tc-btn-invisible'
+    style='background:lightgrey;padding:2px;border: 0;
+    border-radius:10px;padding-left:10px;padding-right:10px;'
+>
+    <$list
+        filter='[<currentTiddler>getindex<CurrentProperty>prefix[true]]'
+        variable=dummy
+        emptyMessage="""false<$action-setfield $index=<<CurrentProperty>> $value=true/>"""
+    >
+        true
+        <$action-setfield
+            $index=<<CurrentProperty>>
+            $value=false
+        />
+    </$list>
+</$button>
